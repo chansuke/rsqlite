@@ -6,6 +6,8 @@ description = "Sqlite clone in Rust"
 edition = "2018"
 repository = "https://github.com/chansuke/rsqlite"
 readme = "README.md"
+categories = ["command-line-utilities", "database"]
+keywords = ["cli", "database"]
 
 [dependencies]
 structopt = "0.3.21"
