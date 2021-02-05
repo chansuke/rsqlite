@@ -1,9 +1,12 @@
 [package]
 name = "rsqlite"
 version = "0.1.0"
-authors = ["chansuke <chansuke@georepublic.de>"]
+authors = ["chansuke <moonset20@gmail.com>"]
+description = "Sqlite clone in Rust"
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+repository = "https://github.com/chansuke/rsqlite"
+readme = "README.md"
 
 [dependencies]
+structopt = "0.3.21"
+rustyline = "7.1.0"
