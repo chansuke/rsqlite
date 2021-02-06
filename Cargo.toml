@@ -12,3 +12,5 @@ keywords = ["cli", "database"]
 [dependencies]
 structopt = "0.3.21"
 rustyline = "7.1.0"
+thiserror = "1.0"
+anyhow = "1.0"
