@@ -1,7 +1,6 @@
 use rustyline::Editor;
-use anyhow::Result;
 
-fn main() -> Result<()>{
+fn main() {
     let mut rl = Editor::<()>::new();
 
     loop {
@@ -10,17 +9,15 @@ fn main() -> Result<()>{
             Ok(line) => {
                 if line == ".exit" {
                     println!("Bye");
-                    break
+                    break;
                 } else {
                     println!("Unrecognized command {:?}", line);
                 }
-            },
+            }
             Err(err) => {
                 println!("Error {:?}", err);
-                break
+                break;
             }
         }
     }
-
-    Ok(())
 }
