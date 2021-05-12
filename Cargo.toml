@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 rustyline = "8.0.0"
+derive-new = "0.5.9"
