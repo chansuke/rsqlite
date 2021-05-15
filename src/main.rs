@@ -1,6 +1,6 @@
-use derive_new::new;
-use rustyline::error::ReadlineError;
 use rustyline::Editor;
+
+use rsqlite::table::{Row, Statement, StatementType, EMAIL_SIZE, USERNAME_SIZE};
 
 enum MetaCommandResult {
     Success,
@@ -12,17 +12,6 @@ enum PrepareResult {
     UnrecognizedStatement,
 }
 
-enum StatementType {
-    Insert,
-    Select,
-    Empty,
-}
-
-#[derive(new)]
-struct Statement {
-    stmt_type: StatementType,
-}
-
 fn do_meta_command(buffer: &str) -> MetaCommandResult {
     if buffer == ".exit" {
         MetaCommandResult::Success
@@ -32,10 +21,14 @@ fn do_meta_command(buffer: &str) -> MetaCommandResult {
 }
 
 fn prepare_statement(buffer: &str, stmt: &mut Statement) -> PrepareResult {
-    if buffer == "insert" {
+    if buffer.starts_with("insert") {
         stmt.stmt_type = StatementType::Insert;
 
-        PrepareResult::Success
+        if buffer.split_whitespace().count() <= 3 {
+            PrepareResult::UnrecognizedStatement
+        } else {
+            PrepareResult::Success
+        }
     } else if buffer == "select" {
         stmt.stmt_type = StatementType::Select;
 
@@ -45,19 +38,19 @@ fn prepare_statement(buffer: &str, stmt: &mut Statement) -> PrepareResult {
     }
 }
 
-fn execute_statement(statement: StatementType) {
-    match statement {
-        StatementType::Insert => {
-            println!("This is where we would do an insert.");
-        }
-        StatementType::Select => {
-            println!("This is where we would do a select");
-        }
-        StatementType::Empty => {
-            println!("Not selected yet");
-        }
-    }
-}
+//fn execute_statement(statement: StatementType) {
+//    match statement {
+//        StatementType::Insert => {
+//            println!("This is where we would do an insert.");
+//        }
+//        StatementType::Select => {
+//            println!("This is where we would do a select");
+//        }
+//        StatementType::Empty => {
+//            println!("Not selected yet");
+//        }
+//    }
+//}
 
 fn main() {
     let mut rl = Editor::<()>::new();
@@ -71,7 +64,7 @@ fn main() {
 
         match input_buffer {
             Ok(buffer) => {
-                if buffer.starts_with(".") {
+                if buffer.starts_with('.') {
                     match do_meta_command(&buffer) {
                         MetaCommandResult::Success => {
                             continue;
@@ -81,7 +74,10 @@ fn main() {
                         }
                     }
                 }
-                let mut statement: Statement = Statement::new(StatementType::Empty);
+                let mut statement: Statement = Statement::new(
+                    StatementType::Empty,
+                    Row::new(0, [0u8; USERNAME_SIZE], [0u8; EMAIL_SIZE]),
+                );
 
                 match prepare_statement(&buffer, &mut statement) {
                     PrepareResult::Success => {
@@ -93,7 +89,7 @@ fn main() {
                     }
                 }
             }
-            Err(err) => {
+            Err(_err) => {
                 println!("Error reading input");
                 break;
             }
